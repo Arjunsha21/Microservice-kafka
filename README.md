@@ -18,6 +18,95 @@ graph TD
   EmailService <--> |Kafka| Kafka
   AnalyticService <--> |Kafka| Kafka
 ```
+flowchart TD
+
+    subgraph KRaft
+        zk[KRaft]
+    end
+
+    subgraph Kafka_Cluster
+
+        subgraph Broker_1["Broker: kafka1\nController: Leader"]
+            p1["prospect-partition-0"]
+            o1["order-partition-0"]
+            c1["config-partition-0"]
+        end
+
+        subgraph Broker_2["Broker: kafka2\nController: Follower"]
+            p2["prospect-partition-1"]
+            o2["order-partition-1"]
+            c2["config-partition-1"]
+        end
+
+        subgraph Broker_3["Broker: kafka3\nController: Follower"]
+            p3["prospect-partition-2"]
+            o3["order-partition-2"]
+            c3["config-partition-2"]
+        end
+
+    end
+
+    zk --> Broker_1
+    zk --> Broker_2
+    zk --> Broker_3
+
+    style zk fill:#eee,stroke:#666,stroke-width:1px
+    style Kafka_Cluster stroke-dasharray: 5 5
+
+---
+flowchart LR
+
+    %% Services
+    PaymentService((Payment service))
+    OrderService((Order service))
+    BrandService((Brand service))
+    AnalyticsService((Analytics service))
+
+    %% Kafka Nodes
+    PaymentProducer["Kafka Producer"]
+    PaymentConsumer["Kafka Consumer"]
+
+    OrderProducer["Kafka Producer"]
+    OrderConsumer["Kafka Consumer"]
+
+    BrandProducer["Kafka Producer"]
+    BrandConsumer["Kafka Consumer"]
+
+    AnalyticsProducer["Kafka Producer"]
+    AnalyticsConsumer["Kafka Consumer"]
+
+    %% Sync Services
+    PaymentSync["PaymentSyncService()"]
+    OrderSync["OrderSyncService()"]
+    BrandSync["BrandSyncService()"]
+
+    %% Connections
+    PaymentService --> PaymentProducer --> PaymentSync
+    PaymentService --> PaymentConsumer --> PaymentSync
+
+    OrderService --> OrderProducer --> OrderSync
+    OrderService --> OrderConsumer --> OrderSync
+
+    BrandService --> BrandProducer --> BrandSync
+    BrandService --> BrandConsumer --> BrandSync
+
+    AnalyticsService --> AnalyticsProducer
+    AnalyticsService --> AnalyticsConsumer
+
+    AnalyticsProducer --> PaymentSync
+    AnalyticsProducer --> OrderSync
+    AnalyticsProducer --> BrandSync
+
+    AnalyticsConsumer --> PaymentSync
+    AnalyticsConsumer --> OrderSync
+    AnalyticsConsumer --> BrandSync
+
+    %% Optional - Draw lines from syncs back to consumers for completeness
+    PaymentSync --> PaymentConsumer
+    OrderSync --> OrderConsumer
+    BrandSync --> BrandConsumer
+
+---
 
 ---
 
