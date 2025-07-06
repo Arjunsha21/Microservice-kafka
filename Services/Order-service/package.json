@@ -1,0 +1,17 @@
+{
+  "name": "order-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "kafka": "^0.2.3",
+    "kafkajs": "^2.2.4"
+  }
+}
