@@ -6,18 +6,10 @@ A microservices-based project leveraging Apache Kafka for inter-service communic
 
 ## Architecture Overview
 
+### Kafka Cluster Architecture
+This diagram illustrates the internal structure of the Kafka cluster, including the KRaft controller and three brokers, each managing partitions for different topics. This setup ensures high availability, partition replication, and controller failover for fault tolerance.
+
 ```mermaid
-graph TD
-  Client["Client (Next.js)"] -->|HTTP| OrderService["Order Service"]
-  OrderService -->|Kafka| PaymentService["Payment Service"]
-  PaymentService -->|Kafka| EmailService["Email Service"]
-  OrderService -->|Kafka| AnalyticService["Analytic Service"]
-  Kafka[("Kafka Broker")]
-  OrderService <--> |Kafka| Kafka
-  PaymentService <--> |Kafka| Kafka
-  EmailService <--> |Kafka| Kafka
-  AnalyticService <--> |Kafka| Kafka
-```
 flowchart TD
 
     subgraph KRaft
@@ -52,8 +44,14 @@ flowchart TD
 
     style zk fill:#eee,stroke:#666,stroke-width:1px
     style Kafka_Cluster stroke-dasharray: 5 5
+```
 
 ---
+
+### Service-Kafka Interaction
+This diagram shows how each microservice interacts with Kafka as both a producer and consumer, and how synchronization services and analytics are integrated for robust, decoupled communication.
+
+```mermaid
 flowchart LR
 
     %% Services
@@ -105,8 +103,7 @@ flowchart LR
     PaymentSync --> PaymentConsumer
     OrderSync --> OrderConsumer
     BrandSync --> BrandConsumer
-
----
+```
 
 ---
 
